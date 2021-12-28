@@ -83,63 +83,53 @@ const reglink = /\/music\/.+/gi;
 let link = decodeURI(window.location.href);
 
 let names = link.match(reglink)[0].slice(7).split('/');
-let linkOfSong = '';
-
-alert(names);
+let allObjects = [];
 
 names.forEach((item, i) => {
     names[i] = item.replace("+", '%20');
 });
 
+class LinkToService {
+    constructor(link, typeArtist, typeAlbum, typeTrack) {
+        this.link = link;
+        this.typeArtist = typeArtist;
+        this.typeAlbum = typeAlbum;
+        this.typeTrack = typeTrack;
+        this.pushToArr();
+    }
+
+    linkToArtist(name) {
+        return this.link + name + this.typeArtist;
+    }
+
+    linkToAlbum(name) {
+        return this.link + name + this.typeAlbum;
+    }
+
+    linkToTrack(name) {
+        return this.link + name + this.typeTrack;
+    }
+
+    pushToArr() {
+        allObjects.push(this);
+    }
+}
+
+const spotify = new LinkToService('https://open.spotify.com/search/', '/artists', '/albums', '/tracks');
+const yaMusic = new LinkToService('https://music.yandex.ru/search?text=', '&type=artists', '&type=albums', '&type=tracks');
+const deezer = new LinkToService('https://www.deezer.com/search/', '/artist', '/album', '/track');
+const appleMusic = new LinkToService('https://beta.music.apple.com/ru/search?term=', '', '', '');
+
 if (names.length === 1) {
-    //spotify
-    linkOfSong = `https://open.spotify.com/search/${names[0]}/artists`;
-    gl[0].setAttribute("href", linkOfSong);
-
-    //yandex music
-    linkOfSong = `https://music.yandex.ru/search?text=${names[0]}&type=artists`;
-    gl[1].setAttribute("href", linkOfSong);
-
-    //deezer
-    linkOfSong = `https://www.deezer.com/search/${names[0]}/artist`;
-    gl[2].setAttribute("href", linkOfSong);
-
-    //apple music
-    linkOfSong = `https://beta.music.apple.com/ru/search?term=${names[0]}`;
-    gl[3].setAttribute("href", linkOfSong);
-
+    gl.forEach((block, i) => {
+        block.setAttribute("href", allObjects[i].linkToArtist(names[0]));
+    });
 } else if (names.length === 2) {
-    //spotify
-    linkOfSong = `https://open.spotify.com/search/${names[0]}%20${names[1]}/albums`;
-    gl[0].setAttribute("href", linkOfSong);
-
-    //yandex music
-    linkOfSong = `https://music.yandex.ru/search?text=${names[0]}%20${names[1]}&type=albums`;
-    gl[1].setAttribute("href", linkOfSong);
-
-    //deezer
-    linkOfSong = `https://www.deezer.com/search/${names[0]}%20${names[1]}/album`;
-    gl[2].setAttribute("href", linkOfSong);
-
-    //apple music
-    linkOfSong = `https://beta.music.apple.com/ru/search?term=${names[0]}%20${names[1]}`;
-    gl[3].setAttribute("href", linkOfSong);
-
+    gl.forEach((block, i) => {
+        block.setAttribute("href", allObjects[i].linkToAlbum(names[1]));
+    });
 } else if (names.length === 3) {
-    //spotify
-    linkOfSong = `https://open.spotify.com/search/${names[0]}%20${names[2]}/tracks`;
-    gl[0].setAttribute("href", linkOfSong);
-
-    //yandex music
-    linkOfSong = `https://music.yandex.ru/search?text=${names[0]}%20${names[2]}&type=tracks`;
-    gl[1].setAttribute("href", linkOfSong);
-
-    //deezer
-    linkOfSong = `https://www.deezer.com/search/${names[2]}/track`;
-    gl[2].setAttribute("href", linkOfSong);
-
-    //apple music
-    linkOfSong = `https://beta.music.apple.com/ru/search?term=${names[2]}`;
-    gl[3].setAttribute("href", linkOfSong);
-
+    gl.forEach((block, i) => {
+        block.setAttribute("href", allObjects[i].linkToTrack(names[2]));
+    });
 }

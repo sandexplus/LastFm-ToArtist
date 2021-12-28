@@ -20,6 +20,5 @@
             "http://www.last.fm/*"
         ],
         "js": ["js/script.js"]
-    }],
-    "permissions": ["activeTab"]
+    }]
 }
